@@ -1,0 +1,30 @@
+{
+  "public": {
+    "AGENTS.md": "docs/AGENTS.example.md",
+    "_templates/决策模板.md": "templates/decision-record.md",
+    "_templates/想法模板.md": "templates/idea.md",
+    "_templates/概念模板.md": "templates/concept.md",
+    "_templates/人物模板.md": "templates/people.md",
+    "_templates/新笔记模板.md": "templates/note.md",
+    "_templates/日记模板.md": "templates/journal.md",
+    "_templates/每日碎片.md": "templates/fragments.md",
+    "_templates/岗位档案模板.md": "templates/position-profile.md",
+    "_templates/面试问题清单模板.md": "templates/interview-question-list.md",
+    "_templates/简历摘要模板.md": "templates/resume-summary.md",
+    "_templates/候选人面试记录模板.md": "templates/interview-notes.md",
+    "_templates/候选人结论模板.md": "templates/candidate-conclusion.md",
+    "_templates/候选人对比模板.md": "templates/candidate-comparison.md",
+    "_templates/小红书.md": "templates/xiaohongshu.md",
+    "_templates/知乎专栏.md": "templates/zhihu-column.md",
+    "_templates/知乎深度长文.md": "templates/zhihu-article.md",
+    "_workspace/opc-os-public/README.md": "README.md",
+    "_workspace/opc-os-public/README.zh-CN.md": "README.zh-CN.md",
+    "_workspace/opc-os-public/LICENSE": "LICENSE",
+    "_workspace/opc-os-public/architecture.md": "docs/architecture.md",
+    "_workspace/opc-os-public/manifest.json": "tools/manifest.json"
+  },
+  "exempt_scan": [
+    "_workspace/opc-os-public/README.md",
+    "_workspace/opc-os-public/README.zh-CN.md"
+  ]
+}
