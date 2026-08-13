@@ -1,6 +1,6 @@
 {
   "public": {
-    "AGENTS.md": "docs/AGENTS.example.md",
+    "_workspace/opc-os-public/AGENTS.example.md": "docs/AGENTS.example.md",
     "_templates/决策模板.md": "templates/decision-record.md",
     "_templates/想法模板.md": "templates/idea.md",
     "_templates/概念模板.md": "templates/concept.md",
