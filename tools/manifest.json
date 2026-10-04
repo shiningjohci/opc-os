@@ -22,11 +22,11 @@
     "_workspace/opc-os-public/README.zh-CN.md": "README.zh-CN.md",
     "_workspace/opc-os-public/LICENSE": "LICENSE",
     "_workspace/opc-os-public/architecture.md": "docs/architecture.md",
-    "_workspace/opc-os-public/skills/kb-onboarding/SKILL.md": "skills/kb-onboarding/SKILL.md",
-    "_workspace/opc-os-public/skills/kb-onboarding/scripts/kb_map.py": "skills/kb-onboarding/scripts/kb_map.py",
+    "_agents/skills/kb-onboarding/SKILL.md": "skills/kb-onboarding/SKILL.md",
+    "_agents/skills/kb-onboarding/scripts/kb_map.py": "skills/kb-onboarding/scripts/kb_map.py",
     "_workspace/opc-os-public/manifest.json": "tools/manifest.json",
-    "_workspace/opc-os-public/skills/release-scrub-gate/SKILL.md": "skills/release-scrub-gate/SKILL.md",
-    "_workspace/opc-os-public/skills/release-scrub-gate/scripts/scrub_scan.py": "skills/release-scrub-gate/scripts/scrub_scan.py"
+    "_agents/skills/release-scrub-gate/SKILL.md": "skills/release-scrub-gate/SKILL.md",
+    "_agents/skills/release-scrub-gate/scripts/scrub_scan.py": "skills/release-scrub-gate/scripts/scrub_scan.py"
   },
   "exempt_scan": [
     "_workspace/opc-os-public/README.md",
