@@ -59,7 +59,9 @@ opc-os/
 │   └── architecture.md     # 四层架构设计详解
 ├── templates/              # 16 个 Obsidian 模板
 ├── workflows/              # （规划中）分步 AI 工作流
-├── skills/                 # （规划中）Codex 技能
+├── skills/
+│   ├── kb-onboarding/      # 冷启动访谈：让 agent 会问，而不是让用户会问
+│   └── release-scrub-gate/ # 发布脱敏三重门：机械扫描 → 双 agent 审核 → 人工签收
 └── tools/
     ├── publish_os.py       # 私人库 → 公开仓库（白名单 + 脱敏）
     └── manifest.json       # 文件映射 + 秘密替换规则

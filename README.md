@@ -56,7 +56,9 @@ opc-os/
 │   └── architecture.md     # Why the four-layer design works
 ├── templates/              # 16 Obsidian templates
 ├── workflows/              # (coming) step-by-step AI workflows
-├── skills/                 # (coming) Codex skills
+├── skills/
+│   ├── kb-onboarding/      # Cold-start interview: make the agent ask, not the user
+│   └── release-scrub-gate/ # 3-gate publish scrub: machine scan → 2 agents → human sign-off
 └── tools/
     ├── publish_os.py       # Private vault → public repo (whitelist + scrub)
     └── manifest.json       # File mapping + secret replacement rules
