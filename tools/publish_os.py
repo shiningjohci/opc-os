@@ -64,6 +64,25 @@ def main():
         dst.write_text(text, encoding="utf-8")
         print(f"  ✓ {src_rel} -> {dst_rel}")
 
+    # ── 脱敏硬闸（release-scrub-gate 的 L1 层）──────────────────────────
+    # 命中即中止：已写入工作区但【不 commit】，给人一个可检查的现场。
+    # 本地私密词表放在 ~/.config/opc-os/ 下，不进仓库（否则扫描器自己成了泄露源）。
+    scrub = repo / "skills/release-scrub-gate/scripts/scrub_scan.py"
+    if scrub.is_file():
+        local_words = Path.home() / ".config/opc-os/scrub-patterns.local.txt"
+        cmd = [sys.executable, str(scrub), "--root", str(repo),
+               "--local", str(local_words),
+               "--ignore", "README.md", "README.zh-CN.md"]
+        print("\n[脱敏闸] L1 机械扫描…")
+        if subprocess.run(cmd).returncode != 0:
+            print("\n[中止] 脱敏扫描命中 → 未 commit。")
+            print("   · 检查现场: git -C %s status" % repo)
+            print("   · 修完重跑；语义层（L2 双 agent 审核）见 skills/release-scrub-gate/SKILL.md")
+            sys.exit(1)
+        print("[脱敏闸] L1 通过 —— 注意：L1 只覆盖确定性模式，语义泄露仍须过 L2 双 agent 审核")
+    else:
+        print("[警告] 未找到 release-scrub-gate/scripts/scrub_scan.py，脱敏闸未生效")
+
     subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
     subprocess.run(["git", "commit", "-m", f"publish: 同步 {len(plan)} 个文件"], cwd=repo, check=True)
     if args.push:

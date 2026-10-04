@@ -14,6 +14,7 @@
     "_templates/候选人面试记录模板.md": "templates/interview-notes.md",
     "_templates/候选人结论模板.md": "templates/candidate-conclusion.md",
     "_templates/候选人对比模板.md": "templates/candidate-comparison.md",
+    "_templates/追问清单模板.md": "templates/follow-up-question-list.md",
     "_templates/小红书.md": "templates/xiaohongshu.md",
     "_templates/知乎专栏.md": "templates/zhihu-column.md",
     "_templates/知乎深度长文.md": "templates/zhihu-article.md",
@@ -21,7 +22,11 @@
     "_workspace/opc-os-public/README.zh-CN.md": "README.zh-CN.md",
     "_workspace/opc-os-public/LICENSE": "LICENSE",
     "_workspace/opc-os-public/architecture.md": "docs/architecture.md",
-    "_workspace/opc-os-public/manifest.json": "tools/manifest.json"
+    "_workspace/opc-os-public/skills/kb-onboarding/SKILL.md": "skills/kb-onboarding/SKILL.md",
+    "_workspace/opc-os-public/skills/kb-onboarding/scripts/kb_map.py": "skills/kb-onboarding/scripts/kb_map.py",
+    "_workspace/opc-os-public/manifest.json": "tools/manifest.json",
+    "_workspace/opc-os-public/skills/release-scrub-gate/SKILL.md": "skills/release-scrub-gate/SKILL.md",
+    "_workspace/opc-os-public/skills/release-scrub-gate/scripts/scrub_scan.py": "skills/release-scrub-gate/scripts/scrub_scan.py"
   },
   "exempt_scan": [
     "_workspace/opc-os-public/README.md",
