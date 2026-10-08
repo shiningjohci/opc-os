@@ -46,17 +46,26 @@ git clone https://github.com/shiningjohci/opc-os.git
 cd opc-os
 ```
 
-1. 读 `docs/AGENTS.example.md`——知识库架构的完整操作手册
-2. 把任意 `templates/` 文件复制进你自己的 Obsidian vault 的 `_templates/`
-3. 从 `templates/idea.md` 和 `templates/decision-record.md` 开始——它们是骨架
+1. 安装 [Obsidian](https://obsidian.md/download)，已有则跳过；也可用 Code → Download ZIP 下载并解压本仓库，不必安装 Git。
+2. 用 Obsidian 将包含 `Home.md` 的目录打开为仓库，手动打开 [从这里开始](Home.md)。
+3. 先看 [虚构跨境电商招聘 Demo](demos/ecommerce-hiring/00-从这里开始.md)，无需插件或 AI。
+4. 按需安装并启用 Dataview，显示动态工作列表；Homepage 仅用于启动自动打开首页，可不装。
+5. 按 [安装与上手指南](docs/install.md) 创建四层空目录、复制所需模板与规则，再让有本机权限的 AI 辅助处理材料。
+
+下载仓库不会自动安装软件、插件或 AI 技能；AI 安装插件前需要明确授权，用户确认信任与启用后还须实际打开验收。已有库不能整包覆盖配置。首页固定入口只在能力变化时维护，动态列表读原文件，不重复抄台账。
+
+工作流与模板取自实际实践；Demo 的全部人物、公司、数字与问答则专为教学虚构，不是实绩或真实招聘记录。
 
 ## 仓库结构
 
 ```
 opc-os/
+├── Home.md                 # 四模块使用首页（无插件可读，Dataview 动态增强）
+├── demos/ecommerce-hiring/  # 六份自包含的虚构招聘闭环
 ├── docs/
 │   ├── AGENTS.example.md   # 完整知识库操作手册（已脱敏）
-│   └── architecture.md     # 四层架构设计详解
+│   ├── architecture.md     # 四层架构设计详解
+│   └── install.md          # 手动安装、AI 辅助、权限与验收
 ├── templates/              # 16 个 Obsidian 模板
 ├── workflows/              # （规划中）分步 AI 工作流
 ├── skills/
