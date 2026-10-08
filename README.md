@@ -43,17 +43,26 @@ git clone https://github.com/shiningjohci/opc-os.git
 cd opc-os
 ```
 
-1. Read `docs/AGENTS.example.md` — the full manual for the vault structure
-2. Copy any `templates/` file into your own Obsidian vault's `_templates/`
-3. Start with `templates/idea.md` + `templates/decision-record.md` — they're the backbone
+1. Install [Obsidian](https://obsidian.md/download) if needed. Alternatively download this repository with Code → Download ZIP; Git is optional.
+2. Open the folder containing `Home.md` as an Obsidian vault and read [Start here](Home.md).
+3. Explore the [fictional e-commerce hiring demo](demos/ecommerce-hiring/00-从这里开始.md); no plugin or AI is required for reading it.
+4. Enable Dataview for dynamic lists. Homepage is optional for opening the home note on startup.
+5. Follow the [installation guide](docs/install.md) to prepare empty vault folders, selected templates and rules before using a local AI agent.
+
+Downloading files does not install software, plugins or AI skills. AI-assisted plugin installation needs explicit permission, user trust/enablement and actual UI verification. Never overwrite an existing vault's settings. Fixed home entries change with capabilities; dynamic lists query source notes rather than duplicate facts.
+
+Workflows and templates come from real practice; all people, companies, figures and answers in the demo are fictional teaching material, not verified business outcomes.
 
 ## Repo layout
 
 ```
 opc-os/
+├── Home.md                 # Four-module home; readable without plugins
+├── demos/ecommerce-hiring/  # Self-contained fictional hiring example
 ├── docs/
 │   ├── AGENTS.example.md   # Full vault operating manual (desensitized)
-│   └── architecture.md     # Why the four-layer design works
+│   ├── architecture.md     # Why the four-layer design works
+│   └── install.md          # Manual/AI setup, permissions and verification
 ├── templates/              # 16 Obsidian templates
 ├── workflows/              # (coming) step-by-step AI workflows
 ├── skills/

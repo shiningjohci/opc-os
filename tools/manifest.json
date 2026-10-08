@@ -1,5 +1,13 @@
 {
   "public": {
+    "_workspace/opc-os-public/Home.md": "Home.md",
+    "_workspace/opc-os-public/install.md": "docs/install.md",
+    "_workspace/opc-os-public/demos/ecommerce-hiring/00-从这里开始.md": "demos/ecommerce-hiring/00-从这里开始.md",
+    "_workspace/opc-os-public/demos/ecommerce-hiring/01-岗位需求.md": "demos/ecommerce-hiring/01-岗位需求.md",
+    "_workspace/opc-os-public/demos/ecommerce-hiring/02-虚构简历.md": "demos/ecommerce-hiring/02-虚构简历.md",
+    "_workspace/opc-os-public/demos/ecommerce-hiring/03-简历摘要与证据缺口.md": "demos/ecommerce-hiring/03-简历摘要与证据缺口.md",
+    "_workspace/opc-os-public/demos/ecommerce-hiring/04-个性化追问与回填.md": "demos/ecommerce-hiring/04-个性化追问与回填.md",
+    "_workspace/opc-os-public/demos/ecommerce-hiring/05-候选人结论.md": "demos/ecommerce-hiring/05-候选人结论.md",
     "_workspace/opc-os-public/AGENTS.example.md": "docs/AGENTS.example.md",
     "_templates/决策模板.md": "templates/decision-record.md",
     "_templates/想法模板.md": "templates/idea.md",
