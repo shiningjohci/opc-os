@@ -53,8 +53,6 @@ HUMAN_NAMES = {
 
 def md_files(root: Path):
     for p in root.rglob("*.md"):
-        if p.is_symlink():
-            continue
         if any(part.startswith(".") for part in p.parts):
             continue
         if "_templates" in p.parts:
@@ -69,22 +67,6 @@ def read_head(path: Path, max_bytes: int = 4000) -> str:
         return ""
 
 
-def read_frontmatter(path: Path) -> str:
-    try:
-        with path.open(encoding="utf-8", errors="replace") as stream:
-            first = stream.readline()
-            if first.lstrip("\ufeff").rstrip("\r\n") != "---":
-                return ""
-            lines = [first]
-            for line in stream:
-                lines.append(line)
-                if line.rstrip("\r\n") == "---":
-                    break
-        return "".join(lines)
-    except OSError:
-        return ""
-
-
 def extract_title(path: Path, text: str) -> str:
     m = re.search(r"^#\s+(.+)$", text, re.M)
     if m:
@@ -93,7 +75,6 @@ def extract_title(path: Path, text: str) -> str:
 
 
 def extract_frontmatter(text: str) -> dict:
-    text = text.lstrip("\ufeff")
     if not text.startswith("---"):
         return {}
     end = text.find("\n---", 3)
@@ -106,44 +87,22 @@ def extract_frontmatter(text: str) -> dict:
         if m:
             out[m.group(1).lower()] = m.group(2).strip()
     tags_raw = out.get("tags", "")
-    if tags_raw.startswith(("[", "'", '"')):
-        tags = re.findall(r"[\w/\-]+", tags_raw.strip("[]").replace('"', "").replace("'", ""))
-    else:
-        tag_block = re.search(r"(?ms)^tags:\s*(.*?)(?=^[A-Za-z_][\w-]*:|\Z)", block)
-        tags = [tag for tag in re.findall(r"[\w/\-]+", tag_block.group(1)) if tag != "-"] if tag_block else []
+    tags = re.findall(r"[\w/\-]+", tags_raw.strip("[]").replace('"', "").replace("'", ""))
     out["_tags"] = tags
     return out
 
 
 def is_private(path: Path, text: str, fm: dict) -> bool:
-    """Exclude private path namespaces and private-tagged notes from output."""
-    if any(re.match(r"^_?private(?:$|[-_])", part, re.IGNORECASE) for part in path.parts):
+    """Exclude explicitly private folders and wiki/private-tagged notes from all output."""
+    if any(part.casefold() in {"private", "_private"} for part in path.parts):
         return True
-
-    def is_private_tag(tag: str) -> bool:
-        raw = tag.strip("/")
-        normalized = raw.casefold()
-        private_prefixes = ("private", "_private", "wiki/private")
-        for prefix in private_prefixes:
-            if normalized == prefix or normalized.startswith((prefix + "/", prefix + "-", prefix + "_")):
-                return True
-            suffix = raw[len(prefix):] if normalized.startswith(prefix) else ""
-            if suffix and suffix[0].isupper():
-                return True
-        return False
-
-    if any(is_private_tag(tag) for tag in fm.get("_tags", [])):
+    tags = set(fm.get("_tags", []))
+    if any(tag.casefold() in {"private", "wiki/private"} for tag in tags):
         return True
-
-    # Parse inline and multiline YAML tag lists without adding a YAML dependency.
+    # Also support common multiline YAML tag lists without adding a YAML dependency.
     match = re.search(r"(?ms)^---\s*\n(.*?)\n---\s*", text)
-    if match:
-        block = match.group(1)
-        tag_match = re.search(r"(?ms)^tags:\s*(.*?)(?=^[A-Za-z_][\w-]*:|\Z)", block)
-        if tag_match:
-            yaml_tags = re.findall(r"[\w/\-]+", tag_match.group(1))
-            if any(is_private_tag(tag) for tag in yaml_tags):
-                return True
+    if match and re.search(r"(?im)^\s*(?:-\s*)?(?:wiki/)?private\s*$", match.group(1)):
+        return True
     return False
 
 
@@ -153,16 +112,13 @@ def collect(root: Path) -> dict:
     recent = []
     tags: dict[str, int] = {}
     ideas_seed = []
-    visible_count = 0
 
     for p in files:
         rel = p.relative_to(root)
-        frontmatter = read_frontmatter(p)
-        fm = extract_frontmatter(frontmatter)
-        if is_private(rel, frontmatter, fm):
-            continue
         text = read_head(p)
-        visible_count += 1
+        fm = extract_frontmatter(text)
+        if is_private(rel, text, fm):
+            continue
         top = rel.parts[0] if rel.parts else ""
         if top in layers:
             layers[top] += 1
@@ -185,7 +141,7 @@ def collect(root: Path) -> dict:
     recent.sort(key=lambda r: r["mtime"], reverse=True)
     return {
         "layers": layers,
-        "total_md": visible_count,
+        "total_md": len(files),
         "recent": recent,
         "tags": tags,
         "ideas_seed": ideas_seed,
@@ -201,14 +157,7 @@ def blank_zones(root: Path, data: dict) -> list[str]:
         if not any(tpl in name for name in data["templates"]):
             continue
         target_dir = root / target
-        count = sum(
-            1
-            for p in target_dir.rglob("*.md")
-            if not p.is_symlink()
-            and not any(part.startswith(".") for part in p.relative_to(root).parts)
-            and "_templates" not in p.relative_to(root).parts
-            and not is_private(p.relative_to(root), read_frontmatter(p), extract_frontmatter(read_frontmatter(p)))
-        ) if target_dir.is_dir() else 0
+        count = sum(1 for _ in target_dir.rglob("*.md")) if target_dir.is_dir() else 0
         if count == 0:
             blanks.append(f"{target}/（模板已备：{tpl}）")
     return sorted(set(blanks))
@@ -307,7 +256,7 @@ def main() -> int:
 
     root = Path(args.vault).expanduser().resolve()
     if not root.is_dir():
-        print(f"[kb_map] ❌ 目录不存在: {root.name or '知识库'}")
+        print(f"[kb_map] ❌ 目录不存在: {root}")
         return 0
 
     data = collect(root)

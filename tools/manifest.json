@@ -34,7 +34,8 @@
     "_agents/skills/kb-onboarding/scripts/kb_map.py": "skills/kb-onboarding/scripts/kb_map.py",
     "_workspace/opc-os-public/manifest.json": "tools/manifest.json",
     "_agents/skills/release-scrub-gate/SKILL.md": "skills/release-scrub-gate/SKILL.md",
-    "_agents/skills/release-scrub-gate/scripts/scrub_scan.py": "skills/release-scrub-gate/scripts/scrub_scan.py"
+    "_agents/skills/release-scrub-gate/scripts/scrub_scan.py": "skills/release-scrub-gate/scripts/scrub_scan.py",
+    "_workspace/opc-os-public/home.base": "home.base"
   },
   "exempt_scan": [
     "_workspace/opc-os-public/README.md",

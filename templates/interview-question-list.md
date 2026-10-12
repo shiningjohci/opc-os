@@ -1,7 +1,7 @@
 ---
 tags: [interview]
-created: <% tp.date.now("YYYY-MM-DD") %>
-updated: <% tp.date.now("YYYY-MM-DD") %>
+created: {{date:YYYY-MM-DD}}
+updated: {{date:YYYY-MM-DD}}
 jd: "[[_workspace/interviews/岗位-批次/00-JD]]"
 ---
 

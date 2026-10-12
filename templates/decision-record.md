@@ -1,11 +1,11 @@
 ---
 tags: [decision]
-created: <% tp.date.now("YYYY-MM-DD") %>
-updated: <% tp.date.now("YYYY-MM-DD") %>
+created: {{date:YYYY-MM-DD}}
+updated: {{date:YYYY-MM-DD}}
 status: decided
 ---
 
-# <% tp.file.title %>
+# {{title}}
 
 ## 背景
 （为什么有这个决策：当时的情境、约束、触发事件）

@@ -1,0 +1,50 @@
+formulas: {}
+properties:
+  status:
+    displayName: 状态
+  next_action:
+    displayName: 下一步
+views:
+  - type: table
+    name: 工作台
+    filters:
+      and:
+        - file.inFolder("_workspace")
+        - '!file.path.contains("/archive/")'
+        - '!file.path.contains("/demos/")'
+        - '!file.path.contains("/private/")'
+        - '!file.hasTag("wiki/private")'
+        - '!file.hasTag("workspace/private")'
+        - status != "done"
+        - status != "published"
+        - status != "archived"
+        - status != "validated"
+        - status != "cancelled"
+    order:
+      - file.name
+      - status
+      - file.mtime
+    sort:
+      - property: file.mtime
+        direction: DESC
+    limit: 6
+  - type: table
+    name: 行为记录
+    filters:
+      and:
+        - file.inFolder("_workspace/行为记录")
+        - or:
+            - status == "captured"
+            - status == "reviewed"
+            - status == "extracted"
+            - status == "applied"
+        - '!file.hasTag("wiki/private")'
+        - '!file.hasTag("workspace/private")'
+    order:
+      - file.name
+      - status
+      - next_action
+    sort:
+      - property: file.mtime
+        direction: DESC
+    limit: 6

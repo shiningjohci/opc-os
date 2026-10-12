@@ -109,7 +109,7 @@ status: seed|growing|evergreen  # 仅 ideas/ 需要
 
 ### 链接类型化规范（relations 字段）
 
-概念页与人物页的 frontmatter 可加关系字段，给内链赋予语义（本体论轻量版）。**正文「## 关联」区保留**（人读），关系字段为机器可读语义层（Dataview 可查询）。**关系字段直接写在顶层（扁平），每个关系一个字段**——不要用 `relations:` 嵌套对象，否则属性面板会折叠截断、不便检查。
+概念页与人物页的 frontmatter 可加关系字段，给内链赋予语义（本体论轻量版）。**正文「## 关联」区保留**（人读），关系字段为机器可读语义层（**原生 Bases** 可查询，Obsidian 1.10+ 无需插件）。**关系字段直接写在顶层（扁平），每个关系一个字段**——不要用 `relations:` 嵌套对象，否则属性面板会折叠截断、不便检查。
 
 ```yaml
 source: "[[_raw/...]]"             # 内容来源（原始素材/对话/事件）
@@ -145,7 +145,7 @@ feeds_into: "[[www]]"              # 被应用在（输出/落地）
 | 草稿 draft | draft → published | 移动文件夹（drafts/ → published/）+ frontmatter `status` |
 | 岗位 position | open → filled → inactive | frontmatter `status` + tag `#wiki/entity/position` |
 
-派生看板统一在 `_wiki/index.md`，用 Dataview 自动生成，不手写维护。
+派生看板统一在 `_wiki/index.md`，用**原生 Bases**（`.base` 文件 + 视图嵌入）自动生成，不手写维护。
 
 ### 单一事实源（引用不复制）
 
@@ -256,7 +256,7 @@ LLM 必须按以下工作流执行操作：
 1. 查孤立页（没有内链指向的页面）
 2. 查断链（指向不存在文件的链接）
 3. 查超 30 天未更新的 `#wiki/idea/seed`
-4. 查 `log.md` 表格完整性（多会话并发追加易破损，破损会让 Dataview/预览渲染错乱）：
+4. 查 `log.md` 表格完整性（多会话并发追加易破损，破损会让 Bases/预览渲染错乱）：
    - **列粘连**：`grep -Fn '||' _wiki/log.md` —— 4 列表里出现 `||` = 两条记录被挤进同一行，必须拆回两行
    - **列数校验**：`sed 's/\\\\//g; s/\\|//g' _wiki/log.md | awk -F'|' '/^\|/ && NF!=6 {printf "第 %d 行：%d 列（应 4 列）\n", NR, NF-2}'` —— 有输出即破损行（链接里的 `\|` 已先剔除不计；4 列行应得 6 个字段）
    - 修复纪律：只补换行 / 纠正列序（操作=人话任务名、工作流=workflow 名），**不改他人记录的内容**（见核心约束「log 并发写纪律」）
@@ -442,8 +442,8 @@ status: seed
 
 ## 首页与新用户上手
 - 默认首页 `Home.md` 仅保留记录一下、做一件事、继续上次、回头看四模块；分类总览留在知识索引，随机漫游不属于默认首页。
-- 固定入口仅在能力变化时维护；动态列表通过 Dataview 查询原文件状态与待办，不逐次复制事实台账。Homepage 仅负责启动打开首页，可不安装；无插件仍可阅读固定入口与 Demo。
-- 新用户先安装 Obsidian（已有则跳过）、下载并打开知识库、阅读首页与虚构 Demo，再按需启用 Dataview 和 Homepage。详细步骤见 `docs/install.md`；模板需 Templater 或手动/AI 填值。
+- 固定入口仅在能力变化时维护；动态列表通过**原生 Bases** 查询原文件状态、通过 **Tasks 插件**汇总待办，不逐次复制事实台账。Homepage 仅负责启动打开首页，可不安装；无插件仍可阅读固定入口与 Demo。
+- 新用户先安装 Obsidian（已有则跳过）、下载并打开知识库、阅读首页与虚构 Demo，再按需启用 Tasks 与 Homepage（**Bases 为 Obsidian 原生功能，1.10+ 无需安装**）。详细步骤见 `docs/install.md`；模板需手动/AI 填值（也可用 Templater）。
 - 下载仓库不自动安装插件或加载 AI 技能。AI 辅助安装需明确授权，用户确认信任与启用；文件准备、插件启用、实际界面验收分别报告。不得覆盖已有库或插件配置。
 - `demos/ecommerce-hiring/` 是自包含虚构教学材料，不进入真实候选人档案、待办或经营统计。发布首页须用泛化副本，不复制私人首页或 `.obsidian` 配置。
 
@@ -458,7 +458,7 @@ status: seed
 ## Tasks
 - 任务管理，用 `- [ ]`、`- [x]` 标记
 - 可用于 `_wiki/log.md` 追踪待办
-- 可用 Dataview 查询：`TASK FROM #wiki/project`
+- 可用 Tasks 插件查询未完成待办（例：`tag includes #wiki/project`）；属性类汇总用原生 Bases。
 
 ## Advanced Tables
 - 增强表格编辑（Tab 对齐、自动格式化）

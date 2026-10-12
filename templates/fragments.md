@@ -1,3 +1,3 @@
-# <% tp.date.now("YYYY-MM-DD") %>
+# {{date:YYYY-MM-DD}}
 
 （直接往这里丢碎碎念，不用分类，不用排版。原样保存。）

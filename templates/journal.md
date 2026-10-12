@@ -1,9 +1,9 @@
 ---
 tags: [journal]
-created: <% tp.date.now("YYYY-MM-DD") %>
+created: {{date:YYYY-MM-DD}}
 ---
 
-# <% tp.date.now("YYYY-MM-DD") %>
+# {{date:YYYY-MM-DD}}
 
 ## 今日摘要
 

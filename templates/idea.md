@@ -1,11 +1,11 @@
 ---
 tags: [idea/seed]
-created: <% tp.date.now("YYYY-MM-DD") %>
-updated: <% tp.date.now("YYYY-MM-DD") %>
+created: {{date:YYYY-MM-DD}}
+updated: {{date:YYYY-MM-DD}}
 status: seed
 ---
 
-# <% tp.file.title %>
+# {{title}}
 
 ## 灵感来源
 

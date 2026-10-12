@@ -1,10 +1,10 @@
 ---
 tags: [people]
-created: <% tp.date.now("YYYY-MM-DD") %>
-updated: <% tp.date.now("YYYY-MM-DD") %>
+created: {{date:YYYY-MM-DD}}
+updated: {{date:YYYY-MM-DD}}
 ---
 
-# <% tp.file.title %>
+# {{title}}
 
 ## 基本信息
 

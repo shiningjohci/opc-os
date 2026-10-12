@@ -1,11 +1,11 @@
 ---
 tags: [entity, entity/position]
-created: <% tp.date.now("YYYY-MM-DD") %>
-updated: <% tp.date.now("YYYY-MM-DD") %>
+created: {{date:YYYY-MM-DD}}
+updated: {{date:YYYY-MM-DD}}
 status: active
 ---
 
-# <% tp.file.title %>
+# {{title}}
 
 ## 岗位定位
 （这个岗位解决什么问题，一句话）
