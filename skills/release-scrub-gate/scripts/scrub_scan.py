@@ -137,6 +137,9 @@ def main() -> int:
     compiled = [(c, s, re.compile(p)) for c, s, p in rules]
     deny_list = load_deny_list(_resolve_deny_path(args.deny_list, "deny-list.json"))
     deny_phrases = load_deny_phrases(_resolve_deny_path(args.deny_phrases, "deny-phrases.txt"))
+    if not deny_list and not deny_phrases:
+        print("[警告] 跨语料词表加载 0 条——闸门静默失效！检查 private/deny-list.json 与 "
+              "private/deny-phrases.txt 是否存在（或用 --deny-list/--deny-phrases 指定）")
     ignore = {n.lower() for n in args.ignore}
     self_slugs = _self_slugs(root)   # 仓库自身地址豁免（owner/repo）
 
