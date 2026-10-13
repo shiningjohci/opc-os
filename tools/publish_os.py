@@ -47,6 +47,17 @@ def main():
                 sys.exit(1)
         plan.append((src_rel, dst_rel))
 
+    # 发布硬拒：private/ 目录与 deny-* 文件绝不发布。
+    # 这两份词表本身就是「哪些值不能见人」的答案——发布它等于把答案发出去。
+    # 三重保险：不在 manifest 白名单 + 目录名自我声明 + 这里硬拒。
+    _BLOCK_DIRS = {"private"}
+    _BLOCK_NAME = re.compile(r"^deny-", re.I)
+    for src_rel, dst_rel in plan:
+        p = Path(src_rel)
+        if _BLOCK_DIRS & set(p.parts) or _BLOCK_NAME.match(p.name):
+            print(f"[中止] 拒绝发布私有词表: {src_rel} -> {dst_rel}")
+            sys.exit(1)
+
     print(f"将发布 {len(plan)} 个文件到 {repo}")
     if args.dry_run:
         for _, dst in sorted(plan, key=lambda x: x[1]):

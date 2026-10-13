@@ -64,6 +64,23 @@ def load_local_patterns(path: Path | None) -> list[tuple[str, str, str]]:
     return rules
 
 
+def _resolve_deny_path(explicit: str | None, filename: str) -> Path:
+    """词表查找顺序：显式参数 → 脚本同级 private/（知识库主副本）→ ~/.config/opc-os/（兜底副本）。
+    主副本放在技能的 private/ 目录里以便备份与编辑，但**绝不随产品发布**——
+    发布管道会硬拒 private/ 与 deny-*（见 publish_os.py）。"""
+    if explicit:
+        p = Path(explicit).expanduser()
+        if p.is_file():
+            return p
+    here = Path(__file__).resolve().parent.parent / "private" / filename   # 技能根/private/
+    if here.is_file():
+        return here
+    alt = Path(__file__).resolve().parent / "private" / filename           # scripts/private/
+    if alt.is_file():
+        return alt
+    return Path.home() / ".config" / "opc-os" / filename
+
+
 def load_deny_list(path: Path | None) -> dict[str, str]:
     """跨语料 deny-list：{值: 类别}。从私有语料抽取，本地维护，**不随产品发布**——
     它本身就是一份「哪些值不能见人」的清单，发布它等于把答案发出去。"""
@@ -109,17 +126,17 @@ def main() -> int:
     ap.add_argument("--local", default="scrub-patterns.local.txt", help="本地私密词表（不入库）")
     ap.add_argument("--ignore", nargs="*", default=[], help="排除的文件名（有意公开的，如 README.md）")
     ap.add_argument("--json", action="store_true")
-    ap.add_argument("--deny-list", default="~/.config/opc-os/deny-list.json",
-                    help="跨语料 deny-list（本地维护，不随产品发布）")
-    ap.add_argument("--deny-phrases", default="~/.config/opc-os/deny-phrases.txt",
-                    help="禁发原句（本地维护，不随产品发布）")
+    ap.add_argument("--deny-list", default=None,
+                    help="跨语料 deny-list 路径（默认：脚本同级 private/，其次 ~/.config/opc-os/）")
+    ap.add_argument("--deny-phrases", default=None,
+                    help="禁发原句路径（默认同上；两份清单均不随产品发布）")
     args = ap.parse_args()
 
     root = Path(args.root).expanduser().resolve()
     rules = GENERIC_RULES + load_local_patterns(root / args.local)
     compiled = [(c, s, re.compile(p)) for c, s, p in rules]
-    deny_list = load_deny_list(Path(args.deny_list).expanduser())
-    deny_phrases = load_deny_phrases(Path(args.deny_phrases).expanduser())
+    deny_list = load_deny_list(_resolve_deny_path(args.deny_list, "deny-list.json"))
+    deny_phrases = load_deny_phrases(_resolve_deny_path(args.deny_phrases, "deny-phrases.txt"))
     ignore = {n.lower() for n in args.ignore}
     self_slugs = _self_slugs(root)   # 仓库自身地址豁免（owner/repo）
 
