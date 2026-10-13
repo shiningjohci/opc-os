@@ -64,6 +64,29 @@ def load_local_patterns(path: Path | None) -> list[tuple[str, str, str]]:
     return rules
 
 
+def load_deny_list(path: Path | None) -> dict[str, str]:
+    """跨语料 deny-list：{值: 类别}。从私有语料抽取，本地维护，**不随产品发布**——
+    它本身就是一份「哪些值不能见人」的清单，发布它等于把答案发出去。"""
+    if not path or not path.is_file():
+        return {}
+    try:
+        return {str(k): str(v) for k, v in json.loads(path.read_text(encoding="utf-8")).items()}
+    except Exception:
+        return {}
+
+
+def load_deny_phrases(path: Path | None) -> list[str]:
+    """禁发原句。人工维护，同样不随产品发布。"""
+    if not path or not path.is_file():
+        return []
+    out = []
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if line and not line.startswith("#"):
+            out.append(line)
+    return out
+
+
 def _self_slugs(root):
     """仓库自身的公开地址（owner/repo）不是泄露——它是产物的下载地址。
     只豁免含完整 slug 的命中；单独出现的账号名仍照常报警。"""
@@ -86,11 +109,17 @@ def main() -> int:
     ap.add_argument("--local", default="scrub-patterns.local.txt", help="本地私密词表（不入库）")
     ap.add_argument("--ignore", nargs="*", default=[], help="排除的文件名（有意公开的，如 README.md）")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--deny-list", default="~/.config/opc-os/deny-list.json",
+                    help="跨语料 deny-list（本地维护，不随产品发布）")
+    ap.add_argument("--deny-phrases", default="~/.config/opc-os/deny-phrases.txt",
+                    help="禁发原句（本地维护，不随产品发布）")
     args = ap.parse_args()
 
     root = Path(args.root).expanduser().resolve()
     rules = GENERIC_RULES + load_local_patterns(root / args.local)
     compiled = [(c, s, re.compile(p)) for c, s, p in rules]
+    deny_list = load_deny_list(Path(args.deny_list).expanduser())
+    deny_phrases = load_deny_phrases(Path(args.deny_phrases).expanduser())
     ignore = {n.lower() for n in args.ignore}
     self_slugs = _self_slugs(root)   # 仓库自身地址豁免（owner/repo）
 
@@ -120,12 +149,26 @@ def main() -> int:
                         "file": rel, "line": i, "category": cat, "severity": sev,
                         "quoted": m.group(0)[:60], "context": line.strip()[:90],
                     })
+            # 跨语料闸：私有语料里的值 / 禁发原句，出现在发布物里 = 泄露
+            for term, cat in deny_list.items():
+                if term in line:
+                    findings.append({
+                        "file": rel, "line": i, "category": f"跨语料·{cat}", "severity": "high",
+                        "quoted": term[:60], "context": line.strip()[:90],
+                    })
+            for ph in deny_phrases:
+                if ph in line:
+                    findings.append({
+                        "file": rel, "line": i, "category": "禁发原句", "severity": "high",
+                        "quoted": ph[:60], "context": line.strip()[:90],
+                    })
 
     if args.json:
         print(json.dumps({"scanned_files": scanned, "findings": findings}, ensure_ascii=False, indent=2))
     else:
         print(f"=== L1 机械扫描：{root} ===")
-        print(f"扫描 {scanned} 个文件，规则 {len(compiled)} 条（通用 {len(GENERIC_RULES)} + 本地 {len(rules)-len(GENERIC_RULES)}）")
+        print(f"扫描 {scanned} 个文件，规则 {len(compiled)} 条（通用 {len(GENERIC_RULES)} + 本地 {len(rules)-len(GENERIC_RULES)}）"
+              f" + 跨语料 {len(deny_list)} 项 + 禁发原句 {len(deny_phrases)} 句")
         if not findings:
             print("\n✅ 0 命中——L1 通过（注意：L1 通过 ≠ 可以发布，还要过 L2 语义审核）")
         else:
